@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Carmel Cumbuco Resort | Digital Hub</title>
+    
+    <!-- Bibliotecas Necessárias (CDNs) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel para transpilar JSX no browser (apenas para este formato single-file) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap');
+
+        :root {
+            --carmel-sand: #FDFBF7;
+            --carmel-gold: #C5A059;
+            --carmel-text: #1A1A1A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--carmel-sand);
+            margin: 0;
+            padding: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 2.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const App = () => {
+            const [lang, setLang] = useState('pt');
+            const chartRef = useRef(null);
+            const chartInstance = useRef(null);
+
+            const content = {
+                title: "Carmel Cumbuco Resort",
+                subtitle: {
+                    pt: "Uma experiência pé na areia, onde o tempo desacelera.",
+                    en: "A barefoot beachfront experience, where time slows down."
+                },
+                mainText: {
+                    pt: "No Carmel Cumbuco, cada detalhe é pensado para criar uma vivência autêntica, sensorial e profundamente acolhedora. Se desejar, será um prazer receber sua impressão em uma das plataformas abaixo.",
+                    en: "At Carmel Cumbuco, every detail is designed to create an authentic, sensory and genuinely welcoming experience. If you wish, we would be honored to receive your impression on one of the platforms below."
+                },
+                actions: {
+                    trip: "TripAdvisor",
+                    booking: "Booking.com"
+                }
+            };
+
+            useEffect(() => {
+                if (chartRef.current) {
+                    const ctx = chartRef.current.getContext('2d');
+                    if (chartInstance.current) {
+                        chartInstance.current.destroy();
+                    }
+                    
+                    chartInstance.current = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [100],
+                                backgroundColor: ['transparent'],
+                                borderColor: ['rgba(197, 160, 89, 0.4)'],
+                                borderWidth: 1.5,
+                                cutout: '96%'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                            animation: false
+                        }
+                    });
+                }
+
+                let scale = 1;
+                let growing = true;
+                const animate = () => {
+                    const container = document.getElementById('pulse-container');
+                    if (container) {
+                        if (growing) {
+                            scale += 0.00012;
+                            if (scale > 1.04) growing = false;
+                        } else {
+                            scale -= 0.00012;
+                            if (scale < 0.96) growing = true;
+                        }
+                        container.style.transform = `scale(${scale})`;
+                    }
+                    requestAnimationFrame(animate);
+                };
+                const animId = requestAnimationFrame(animate);
+                return () => {
+                    cancelAnimationFrame(animId);
+                    if (chartInstance.current) {
+                        chartInstance.current.destroy();
+                    }
+                };
+            }, []);
+
+            return (
+                <div className="min-h-screen text-[#1A1A1A] font-light flex flex-col items-center justify-center p-8 transition-all duration-1000 overflow-hidden relative">
+                    
+                    {/* Seletor de Idioma */}
+                    <div className="fixed top-10 right-10 z-50 flex space-x-6">
+                        <button 
+                            onClick={() => setLang('pt')} 
+                            className={`text-[10px] tracking-[0.3em] uppercase transition-all duration-500 ${lang === 'pt' ? 'text-[#C5A059] font-medium' : 'text-gray-300'}`}
+                        >
+                            PT
+                        </button>
+                        <button 
+                            onClick={() => setLang('en')} 
+                            className={`text-[10px] tracking-[0.3em] uppercase transition-all duration-500 ${lang === 'en' ? 'text-[#C5A059] font-medium' : 'text-gray-300'}`}
+                        >
+                            EN
+                        </button>
+                    </div>
+
+                    {/* HUB PRINCIPAL */}
+                    <main className="w-full max-w-[340px] text-center animate-fadeIn">
+                        
+                        <header className="mb-12">
+                            <h1 className="text-[20px] font-extralight uppercase tracking-[0.45em] mb-6">
+                                {content.title}
+                            </h1>
+                            <div className="h-[1px] w-12 bg-[#C5A059] mx-auto opacity-40"></div>
+                        </header>
+
+                        {/* Âncora Visual de Respiração com Imagem Emoldurada */}
+                        <div className="mb-14 h-[180px] flex items-center justify-center relative">
+                            <div id="pulse-container" className="relative w-[180px] h-[180px] flex items-center justify-center transition-transform duration-100">
+                                
+                                {/* Imagem do Resort (Circular) */}
+                                <div className="absolute inset-4 rounded-full overflow-hidden shadow-sm">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" 
+                                        alt="Carmel Cumbuco Atmosphere"
+                                        className="w-full h-full object-cover opacity-90"
+                                        onError={(e) => { e.target.style.display = 'none'; }}
+                                    />
+                                    {/* Overlay Suave para Integração */}
+                                    <div className="absolute inset-0 bg-[#C5A059]/5 mix-blend-overlay"></div>
+                                </div>
+
+                                {/* Gráfico Chart.js (Pulso Dourado ao Redor) */}
+                                <div className="absolute inset-0 z-10">
+                                    <canvas ref={chartRef}></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Narrativa e Contexto */}
+                        <div className="space-y-8 mb-16 px-2">
+                            <p className="text-[14px] leading-relaxed font-normal tracking-wide text-gray-800">
+                                {content.subtitle[lang]}
+                            </p>
+                            <div className="h-[1px] w-6 bg-gray-200 mx-auto opacity-60"></div>
+                            <p className="text-[13px] leading-[1.9] text-gray-500 font-light italic">
+                                {content.mainText[lang]}
+                            </p>
+                        </div>
+
+                        {/* Ações de Feedback */}
+                        <nav className="space-y-4">
+                            <a 
+                                href="https://www.tripadvisor.com.pt/UserReviewEdit-g657869-d8513163-Carmel_Cumbuco_Resort-Cumbuco_Caucaia_State_of_Ceara.html" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="block w-full py-5 border border-[#E5E1D8] bg-white text-[11px] uppercase tracking-[0.3em] text-[#1A1A1A] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
+                            >
+                                {content.actions.trip}
+                            </a>
+
+                            <a 
+                                href="https://www.booking.com/reviews/br/hotel/carmel-cumbuco-resort.pt-br.html" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="block w-full py-5 border border-[#E5E1D8] bg-white text-[10px] uppercase tracking-[0.25em] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
+                            >
+                                {content.actions.booking}
+                            </a>
+                        </nav>
+
+                        <footer className="mt-20 opacity-20 text-[9px] tracking-[0.6em] uppercase">
+                            Cumbuco • Brasil
+                        </footer>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
