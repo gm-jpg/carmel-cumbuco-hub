@@ -61,8 +61,18 @@
                     en: "At Carmel Cumbuco, every detail is designed to create an authentic, sensory and genuinely welcoming experience. If you wish, we would be honored to receive your impression on one of the platforms below."
                 },
                 actions: {
-                    trip: "TripAdvisor",
-                    booking: "Booking.com"
+                    trip: {
+                        pt: "TripAdvisor",
+                        en: "TripAdvisor"
+                    },
+                    booking: {
+                        pt: "Booking.com",
+                        en: "Booking.com"
+                    },
+                    survey: {
+                        pt: "Avaliação Geral",
+                        en: "General Feedback"
+                    }
                 }
             };
 
@@ -189,16 +199,25 @@
                                 rel="noopener noreferrer"
                                 className="block w-full py-5 border border-[#E5E1D8] bg-white text-[11px] uppercase tracking-[0.3em] text-[#1A1A1A] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
                             >
-                                {content.actions.trip}
+                                {content.actions.trip[lang]}
                             </a>
 
                             <a 
                                 href="https://www.booking.com/reviews/br/hotel/carmel-cumbuco-resort.pt-br.html" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
-                                className="block w-full py-5 border border-[#E5E1D8] bg-white text-[10px] uppercase tracking-[0.25em] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
+                                className="block w-full py-5 border border-[#E5E1D8] bg-white text-[10px] uppercase tracking-[0.25em] text-[#1A1A1A] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
                             >
-                                {content.actions.booking}
+                                {content.actions.booking[lang]}
+                            </a>
+
+                            <a 
+                                href="https://surveys.reviewpro.com/feedback/survey/ZFKpqDN212N0PMN9/433562" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="block w-full py-5 border border-[#E5E1D8] bg-white text-[10px] uppercase tracking-[0.25em] text-[#1A1A1A] hover:border-[#C5A059] transition-all duration-700 active:scale-95 shadow-sm"
+                            >
+                                {content.actions.survey[lang]}
                             </a>
                         </nav>
 
