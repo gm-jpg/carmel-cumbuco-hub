@@ -1,0 +1,29 @@
+name: Emergency full Git repository export
+on:
+  push:
+    branches:
+      - chatgpt-emergency-export-20261121
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Package complete Git history
+        shell: bash
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' '+refs/tags/*:refs/tags/*'
+          git bundle create "$RUNNER_TEMP/carmel-cumbuco-hub.bundle" --all
+          test -s "$RUNNER_TEMP/carmel-cumbuco-hub.bundle"
+          git bundle verify "$RUNNER_TEMP/carmel-cumbuco-hub.bundle"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: carmel-cumbuco-hub-full-git
+          path: ${{ runner.temp }}/carmel-cumbuco-hub.bundle
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
